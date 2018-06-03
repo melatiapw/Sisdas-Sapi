@@ -5,8 +5,8 @@ import glob
 import shutil
 
 
-iterate_nama = 1
-for sapi_class in glob.glob("D:/DataSapi-Train/bisain"):
+
+for sapi_class in glob.glob("D:/DataSapi-Train/bisabisa"):
     for filename in glob.glob(os.path.join(sapi_class, "*.bmp")):
         try:
             #disini hough
@@ -46,17 +46,9 @@ for sapi_class in glob.glob("D:/DataSapi-Train/bisain"):
             namafile = filename.split("\\")[-1]
 
             hasil_crop = img_hasil[x:x + 112, y - 56:y + 56]  # im awe [y,x]
-            # cv2.imwrite(os.path.join(sapi_class,namafile+"crop.jpg"), hasil_crop)
-            cv2.imwrite(os.path.join(sapi_class,str(iterate_nama)+".jpg"), hasil_crop)
-            iterate_nama += 1
-
+            cv2.imwrite(os.path.join(sapi_class,namafile+"crop.jpg"), hasil_crop)
             cv2.waitKey()
-            # # canny
-            # img_canny = cv2.Canny(hasil_crop, 100, 240)
-            # cv2.imwrite(os.path.join(sapi_class,str(iterate_nama)+".jpg"), img_canny)
-            # iterate_nama += 1
-            #
-            # cv2.waitKey()
+
 
         except OSError as e:
             print("Something happened:", e)
