@@ -28,7 +28,7 @@ def index():
     if request.method == 'POST':
     # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
+            print('No file part')
             return redirect(request.url)
         file = request.files['file']
         # if user does not select file, browser also
@@ -131,7 +131,8 @@ def index():
             # predict label of test image
             modelrf = pickle.load(open("model.sav", 'rb'))
             prediction = modelrf.predict(global_feature.reshape(1,-1))[0]
-
+            
+            print("kelas:",prediction)
             # show predicted label on image
             cv2.putText(image, train_labels[prediction], (20,30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1)
 
