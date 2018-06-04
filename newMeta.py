@@ -16,7 +16,7 @@ from sklearn.externals import joblib
 from dataExtract import *
 
 
-
+#tempat naro file yang diupload sama user
 for sapi_class in glob.glob("D:/DataSapi-Train/bisabisa"):
     for filename in glob.glob(os.path.join(sapi_class, "*.bmp")):
         try:
@@ -62,7 +62,7 @@ for sapi_class in glob.glob("D:/DataSapi-Train/bisabisa"):
 
 
         except OSError as e:
-print("Something happened:", e)
+            print("Something happened:", e)
 
 
 
