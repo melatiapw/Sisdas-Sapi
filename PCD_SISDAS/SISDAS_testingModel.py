@@ -49,7 +49,8 @@ for file in glob.glob(input_path + "/*.bmp"):
         if(str(circles) == "None"):
             circles = cv2.HoughCircles(img_gray, cv2.HOUGH_GRADIENT, 1, 20, param1=320, param2=37, minRadius=0, maxRadius=0)
             if(str(circles) == "None"):
-                continue
+                os.remove(file)
+                break
         circles = np.uint16(np.around(circles))
 
         # cv2.imshow("hasil", circles)
@@ -104,10 +105,14 @@ for file in glob.glob(hasil_path + "/*.jpg"):
 
         namafile = file.split("\\")[-1]
         cv2.imwrite(os.path.join(hasil_path, namafile+"_hasil"+".jpg"), image)
+        cv2.imshow('Hasil Klasifikasi', image)
+        cv2.waitKey(0)
 
     except OSError as e:
         print("Something happened:", e)
 
+iterate_ori = 1
 for file_ori in glob.glob(input_path):
     for filename in glob.glob(os.path.join(file_ori, "*.bmp")):
-        os.rename(filename, os.path.join(hasil_path, namafile+ "_ori" + '.bmp'))
+        os.rename(filename, os.path.join(hasil_path, str(iterate_ori)+ "_ori" + '.bmp'))
+        iterate_ori+=1

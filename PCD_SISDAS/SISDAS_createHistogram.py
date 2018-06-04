@@ -9,6 +9,7 @@ import numpy as np
 import cv2
 import os
 import h5py
+import matplotlib.pyplot as plt
 
 # fixed-sizes for image
 fixed_size = tuple((112, 112))

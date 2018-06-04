@@ -10,18 +10,16 @@ import glob
 import cv2
 import pickle
 from matplotlib import pyplot
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict
 from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+from sklearn import metrics as ms
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.externals import joblib
 from SISDAS_createHistogram import *
-
-# create all the machine learning models
-models = []
-models.append(('RF', RandomForestClassifier(n_estimators=100, random_state=9)))
-models.append(('SVM', SVC(random_state=9)))
+import matplotlib.pyplot as plt
+import itertools
 
 # variables to hold the results and names
 results = []
@@ -63,26 +61,9 @@ print ("Test labels : {}".format(testLabelsGlobal.shape))
 import warnings
 warnings.filterwarnings('ignore')
 
-# 10-fold cross validation
-for name, model in models:
-    kfold = KFold(n_splits=10, random_state=7)
-    cv_results = cross_val_score(model, trainDataGlobal, trainLabelsGlobal, cv=kfold, scoring=scoring)
-    results.append(cv_results)
-    names.append(name)
-    msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
-    print(msg)
-
-# boxplot algorithm comparison
-fig = pyplot.figure()
-fig.suptitle('Machine Learning algorithm comparison')
-ax = fig.add_subplot(111)
-pyplot.boxplot(results)
-ax.set_xticklabels(names)
-# pyplot.show()
-
 #Random Forest
 # create the model - Random Forests
-clf  = RandomForestClassifier(n_estimators=100, random_state=9, verbose=2, oob_score=True)
+clf = RandomForestClassifier(n_estimators=100, random_state=9, verbose=2, oob_score=True)
 
 # fit the training data to the model
 clf.fit(trainDataGlobal, trainLabelsGlobal)
@@ -90,3 +71,70 @@ clf.fit(trainDataGlobal, trainLabelsGlobal)
 # save the model to disk
 filename = 'model.sav'
 pickle.dump(clf, open(filename, 'wb'))
+
+#predict test
+modelrf = pickle.load(open("model.sav", 'rb'))
+test_predict = modelrf.predict(testDataGlobal)
+
+#confusion matrix
+def plot_confusion_matrix(cm, classes,
+                          normalize=False,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    """
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    print(cm)
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+
+# Compute confusion matrix
+cnf_matrix = confusion_matrix(testLabelsGlobal, test_predict)
+np.set_printoptions(precision=2)
+
+# Plot non-normalized confusion matrix
+plt.figure()
+plot_confusion_matrix(cnf_matrix, classes=train_labels,
+                      title='Confusion matrix, without normalization')
+
+# Plot normalized confusion matrix
+plt.figure()
+plot_confusion_matrix(cnf_matrix, classes=train_labels, normalize=True,
+                      title='Normalized confusion matrix')
+
+plt.show()
+
+# 10-fold cross validation
+kfold = KFold(n_splits=10, random_state=7)
+#Mengetahui akurasi 10 Cross Fold Validation
+cv_results = cross_val_score(modelrf, trainDataGlobal, trainLabelsGlobal, cv=kfold, scoring=scoring)
+results.append(cv_results)
+msg = "%s: %f (%f)" % ("Cross Validation Score", cv_results.mean(), cv_results.std())
+
+#Bandingkan Akurasi hasil split data train dan data test dengan 10 Cross Validation
+print ("Test Split Accuracy:", ms.accuracy_score(testLabelsGlobal,test_predict))
+print(msg)
+

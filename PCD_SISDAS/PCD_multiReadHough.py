@@ -17,7 +17,8 @@ output_path7 = "D:/DataSapi-Train/output7"
 output_path8 = "D:/DataSapi-Train/output8"
 
 #scan gambar di folder masing-masing kelas yang memiliki format .bmp
-for sapi_class in glob.glob("D:/DataSapi-Train/Class_1"): #untuk scan Class1
+for sapi_class in glob.glob("D:/DataSapi-Train/bisain"): #untuk scan Class1
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_1"): #untuk scan Class1
 # for sapi_class in glob.glob("D:/DataSapi-Train/Class_2"): #untuk scan Class2
 # for sapi_class in glob.glob("D:/DataSapi-Train/Class_3"): #untuk scan Class3
 # for sapi_class in glob.glob("D:/DataSapi-Train/Class_4"): #untuk scan Class4
@@ -66,6 +67,7 @@ for sapi_class in glob.glob("D:/DataSapi-Train/Class_1"): #untuk scan Class1
             namafile = filename.split("\\")[-1]
             #crop gambar hasil hough transform seukuran 112x112 piksel
             hasil_crop = img_hasil[x:x + 112, y - 56:y + 56]  # im awe [y,x]
+            print(hasil_crop)
             #Tulis hasil hough transform ke dalam folder output sesuai Class
             cv2.imwrite(os.path.join(output_path1,str(iterate_name) + '.jpg'), hasil_crop) #output hough transform untuk Class_1
             # cv2.imwrite(os.path.join(output_path2,str(iterate_name) + '.jpg'), hasil_crop) #output hough transform untuk Class_2
