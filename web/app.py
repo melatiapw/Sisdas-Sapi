@@ -132,7 +132,7 @@ def index():
             modelrf = pickle.load(open("model.sav", 'rb'))
             prediction = modelrf.predict(global_feature.reshape(1,-1))[0]
             
-            print("kelas:",prediction)
+            print("kelas:",train_labels[prediction])
             # show predicted label on image
             cv2.putText(image, train_labels[prediction], (20,30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1)
 
