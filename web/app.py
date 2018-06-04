@@ -136,9 +136,9 @@ def index():
             # show predicted label on image
             cv2.putText(image, train_labels[prediction], (20,30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1)
 
-            namafile = file.split("\\")[-1]
+            namafile = "blabla"
             cv2.imwrite(os.path.join(input_path, namafile+"_hasil"+".jpg"), image)
-
+            return(train_labels[prediction])
         except OSError as e:
             print("Something happened:", e)
    
