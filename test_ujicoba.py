@@ -10,13 +10,31 @@ import os
 import glob
 import cv2
 import matplotlib.pyplot as plt
-from jadiHistogram import fixed_size
-from jadiHistogram import fd_histogram
-from train_ujicoba import train_labels
 
 # path to input data
 input_path = "Input"
 hasil_path = "hasilKlasifikasi"
+train_path = "Hough/train"
+
+# fixed-sizes for image
+fixed_size = tuple((112, 112))
+
+# bins for histogram
+bins = 8
+
+# get the training labels
+train_labels = os.listdir(train_path)
+
+# feature-descriptor: Color Histogram
+def fd_histogram(image, mask=None):
+    # convert the image to HSV color-space
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    # compute the color histogram
+    hist  = cv2.calcHist([image], [0, 1, 2], None, [bins, bins, bins], [0, 256, 0, 256, 0, 256])
+    # normalize the histogram
+    cv2.normalize(hist, hist)
+    # return the histogram
+    return hist.flatten()
 
 iterate_name = 1
 # loop through the input images
