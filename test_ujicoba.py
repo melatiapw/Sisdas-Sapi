@@ -107,3 +107,7 @@ for file in glob.glob(hasil_path + "/*.jpg"):
 
     except OSError as e:
         print("Something happened:", e)
+
+for file_ori in glob.glob(input_path):
+    for filename in glob.glob(os.path.join(file_ori, "*.bmp")):
+        os.rename(filename, os.path.join(hasil_path, namafile+ "_ori" + '.bmp'))
