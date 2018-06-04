@@ -136,14 +136,20 @@ def index():
             # show predicted label on image
             cv2.putText(image, train_labels[prediction], (20,30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1)
 
-            namafile = "blabla"
+            namafile = "hasil"
             cv2.imwrite(os.path.join(input_path, namafile+"_hasil"+".jpg"), image)
+            print(train_labels[prediction])
             return render_template('hasil.html',hasil=train_labels[prediction])
         except OSError as e:
             print("Something happened:", e)
    
 
-    return render_template('layout.html')
+    return render_template('hasil.html',hasil=train_labels[prediction])
+
+#Route img hasil upload
+@app.route('/images/<filename>', methods=['GET', 'POST'])
+def show_file(filename):
+    return send_from_directory('/web/images', filename,as_attachment=True)
         
 if __name__ == '__main__':
     app.run(debug=True)
