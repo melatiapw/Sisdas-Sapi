@@ -138,7 +138,7 @@ def index():
 
             namafile = "blabla"
             cv2.imwrite(os.path.join(input_path, namafile+"_hasil"+".jpg"), image)
-            return(train_labels[prediction])
+            return render_template('hasil.html',hasil=train_labels[prediction])
         except OSError as e:
             print("Something happened:", e)
    
