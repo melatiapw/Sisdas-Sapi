@@ -9,45 +9,46 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.min.css')}}">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="main.js"></script>
-
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script type='text/javascript'>
-        $(function(){
-        // Wrap your File input in a wrapper <div>
-        var wrapper = $('<div/>').css({height:0,width:0,'overflow':'hidden'});
-        var fileInput = $(':file').wrap(wrapper);
-
-        // When your file input changes, update the text for your button
-        fileInput.change(function(){
-            $this = $(this);
-            // If the selection is empty, reset it
-            if($this.val().length == 0) {
-            $('#file').text("Masukkan Gambar");
-            }else{
-            $('#file').text($this.val());
-            }
-        })
-
-        // When your fake button is clicked, simulate a click of the file button
-        $('#file').click(function(){
-            fileInput.click();
-        }).show();
-        });
-    </script>
 </head>
-
 <body>
     {% include 'include/navbar.html' %}
-    
-        {% include 'include/header.html' %}
-    
+
+    {% include 'include/header.html' %}
+
     <div class="container">
-        
         {% block body %}{% endblock %}
     </div>
-    <script src="{{url_for('static', filename='js/style.js')}}"
+    <!-- <div class="container">    
+        <section style="background-color: black" id="hasil" class="content-section text-center">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <h2>Hasil</h2>
+                            <hr style="border-color: white" class="my-4">
+                            <p>Ini hasil klasifikasi pola kalung sapi</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <br>
+            <br>
+            <br>
+        
+            <section id="tentang" class="content-section text-center">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto">
+                                <h2>Tentang Kita</h2>
+                                <hr style="border-color: black" class="my-4">
+                                <p>Alvin Afandi (G6410037) | Ahmad Syauqi (G64150078) |  Melati Aulia (G6410080) | Rakean Gilang D P (G64150090)</p>
+                                <p>Copyright &copy; Tim PCD ft. Sisdas</p>
+                            </div>
+                        </div>
+                    </div>
+                </section> -->
+    </div>
+    <script src="{{url_for('static', filename='js/style.js')}}"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 </body>
 </html>

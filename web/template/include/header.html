@@ -15,14 +15,11 @@
         </div>
         <div class="col-lg-8 mx-auto">
           <p class="text-faded mb-5">Ekstraksi Pola pada Kalung Sapi dengan Menggunakan Hough Transform dengan Metode Klasifikasi Random Forest</p>
-              <div>
-                <button id="file" class="btn">Masukkan Gambar</button>
-                <form role="form" method="POST" enctype="multipart/form-data" action="/"></form>
-                  <input type="file" name="file" accept="image/png, image/jpeg, image/bmp">
-              </form>
-              </div>
-          <br>
-          <button class="btn btn-success">Cek Yuks</button>
+              <form  method="post" enctype="multipart/form-data">
+                <!-- <button id="fileToUpload" type="file" name="file" class="btn">Masukkan Gambar</button> -->
+                <input class="btn btn-success" type="file" name="file" id="fileToUpload">
+                <input class="btn btn-success" type="submit" value="Cek Yuks">
+            </form>
         </div>
       </div>
     </div>
