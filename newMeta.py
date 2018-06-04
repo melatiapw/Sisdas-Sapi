@@ -1,8 +1,19 @@
+# import the necessary packages
+import h5py
+import numpy as np
 import os
-import cv2
-import numpy
 import glob
+import cv2
 import shutil
+
+from matplotlib import pyplot
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import KFold, StratifiedKFold
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.externals import joblib
+from dataExtract import *
 
 
 
@@ -19,7 +30,7 @@ for sapi_class in glob.glob("D:/DataSapi-Train/bisabisa"):
                 circles = cv2.HoughCircles(img_gray, cv2.HOUGH_GRADIENT, 1, 20, param1=320, param2=37, minRadius=0, maxRadius=0)
                 if(str(circles) == "None"):
                     continue
-            circles = numpy.uint16(numpy.around(circles))
+            circles = np.uint16(np.around(circles))
 
             # cv2.imshow("hasil", circles)
             for i in circles[0, :]:
@@ -28,7 +39,7 @@ for sapi_class in glob.glob("D:/DataSapi-Train/bisabisa"):
 
             flag = 1
             row, col, ch = img_biner.shape
-            graykanvas = numpy.zeros((row, col, 1), numpy.uint8)
+            graykanvas = np.zeros((row, col, 1), np.uint8)
             for i in range(0, row):
                 for j in range(0, col):
                     b, g, r = img_biner[i, j]
@@ -53,25 +64,11 @@ for sapi_class in glob.glob("D:/DataSapi-Train/bisabisa"):
         except OSError as e:
 print("Something happened:", e)
 
+
+
 #-----------------------------------
 # TRAINING OUR MODEL
 #-----------------------------------
-
-# import the necessary packages
-import h5py
-import numpy as np
-import os
-import glob
-import cv2
-from matplotlib import pyplot
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.model_selection import KFold, StratifiedKFold
-from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
-from sklearn.externals import joblib
-from dataExtract import *
-
 # create all the machine learning models
 models = []
 models.append(('RF', RandomForestClassifier(n_estimators=100, random_state=9)))
@@ -177,4 +174,4 @@ for file in glob.glob(test_path + "/*.jpg"):
 
     # display the output image
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-plt.show()
+    plt.show()
