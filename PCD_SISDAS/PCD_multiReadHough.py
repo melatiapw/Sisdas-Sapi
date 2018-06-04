@@ -17,8 +17,8 @@ output_path7 = "D:/DataSapi-Train/output7"
 output_path8 = "D:/DataSapi-Train/output8"
 
 #scan gambar di folder masing-masing kelas yang memiliki format .bmp
-for sapi_class in glob.glob("D:/DataSapi-Train/bisain"): #untuk scan Class1
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_1"): #untuk scan Class1
+# for sapi_class in glob.glob("D:/DataSapi-Train/bisain"): #untuk scan folder ujicoba
+for sapi_class in glob.glob("D:/DataSapi-Train/Class_1"): #untuk scan Class1
 # for sapi_class in glob.glob("D:/DataSapi-Train/Class_2"): #untuk scan Class2
 # for sapi_class in glob.glob("D:/DataSapi-Train/Class_3"): #untuk scan Class3
 # for sapi_class in glob.glob("D:/DataSapi-Train/Class_4"): #untuk scan Class4
