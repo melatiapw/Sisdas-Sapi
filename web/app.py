@@ -22,6 +22,36 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+ #PCD
+ # path to input data
+input_path = UPLOAD_FOLDER
+hasil_path = "hasilKlasifikasi"
+train_path = "Hough/train"
+
+# fixed-sizes for image
+fixed_size = tuple((112, 112))
+
+# bins for histogram
+bins = 8
+
+# get the training labels
+train_labels = os.listdir(train_path)
+
+# feature-descriptor: Color Histogram
+
+
+
+def fd_histogram(image, mask=None):
+    # convert the image to HSV color-space
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    # compute the color histogram
+    hist  = cv2.calcHist([image], [0, 1, 2], None, [bins, bins, bins], [0, 256, 0, 256, 0, 256])
+    # normalize the histogram
+    cv2.normalize(hist, hist)
+    # return the histogram
+    return hist.flatten()
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -43,31 +73,6 @@ def index():
             # utama(filename)
             filenamee = filename
 
-     #PCD
-     # path to input data
-    input_path = UPLOAD_FOLDER
-    hasil_path = "hasilKlasifikasi"
-    train_path = "Hough/train"
-
-    # fixed-sizes for image
-    fixed_size = tuple((112, 112))
-
-    # bins for histogram
-    bins = 8
-
-    # get the training labels
-    train_labels = os.listdir(train_path)
-
-    # feature-descriptor: Color Histogram
-    def fd_histogram(image, mask=None):
-        # convert the image to HSV color-space
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-        # compute the color histogram
-        hist  = cv2.calcHist([image], [0, 1, 2], None, [bins, bins, bins], [0, 256, 0, 256, 0, 256])
-        # normalize the histogram
-        cv2.normalize(hist, hist)
-        # return the histogram
-        return hist.flatten()
 
     iterate_name = 1
     # loop through the input images
@@ -112,14 +117,20 @@ def index():
             hasil_crop = img_hasil[x:x + 112, y - 56:y + 56]  # im awe [y,x]
             cv2.imwrite(os.path.join(hasil_path,str(iterate_name) + '.jpg'), hasil_crop)
             iterate_name+=1
-            cv2.waitKey()
-
+            print("crop")
+            print(hasil_crop)
+            print(type(hasil_crop))
         except OSError as e:
             print("Something happened:", e)
+
+    # for file in glob.glob(hasil_path + "/*.jpg"):
 
     for file in glob.glob(hasil_path + "/*.jpg"):
         try:
             # baca gambar hasil Hough Transform
+            print("glob")
+            print(file)
+            print(type(file))
             image = cv2.imread(file)
 
             # resize gambarnya
@@ -139,17 +150,16 @@ def index():
             namafile = "hasil"
             cv2.imwrite(os.path.join(input_path, namafile+"_hasil"+".jpg"), image)
             print(train_labels[prediction])
-            return render_template('hasil.html',hasil=train_labels[prediction])
+            return render_template('hasil.html',hasil=train_labels[prediction],nama=namafile+"_hasil"+".jpg")
         except OSError as e:
             print("Something happened:", e)
    
 
-    return render_template('hasil.html',hasil=train_labels[prediction])
-
+    return render_template('hasil.html')
 #Route img hasil upload
 @app.route('/images/<filename>', methods=['GET', 'POST'])
 def show_file(filename):
-    return send_from_directory('/web/images', filename,as_attachment=True)
+    return send_from_directory('images/', filename,as_attachment=True)
         
 if __name__ == '__main__':
     app.run(debug=True)
