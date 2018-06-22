@@ -19,14 +19,14 @@ output_path8 = "D:/DataSapi-Train/output8"
 
 #scan gambar di folder masing-masing kelas yang memiliki format .bmp
 
-for sapi_class in glob.glob("D:/DataSapi-Train/Class_1"): #untuk scan Class1 done
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_2"): #untuk scan Class2 done
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_3"): #untuk scan Class3 otw
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_4"): #untuk scan Class4 otw
+for sapi_class in glob.glob("D:/DataSapi-Train/Class_1"): #untuk scan Class1
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_2"): #untuk scan Class2
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_3"): #untuk scan Class3
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_4"): #untuk scan Class4
 # for sapi_class in glob.glob("D:/DataSapi-Train/Class_5"): #untuk scan Class5
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_6"): #untuk scan Class6 done
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_7"): #untuk scan Class7 done
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_8"): #untuk scan Class8 done
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_6"): #untuk scan Class6
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_7"): #untuk scan Class7
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_8"): #untuk scan Class8
     for filename in glob.glob(os.path.join(sapi_class, "*.bmp")):
         try:
             #Mulai Hough Transform
