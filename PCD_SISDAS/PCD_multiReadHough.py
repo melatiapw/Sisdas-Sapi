@@ -7,6 +7,7 @@ import shutil
 iterate_name = 1
 iterate_class = 1
 
+hasilhough = "D:/DataSapi-Train/hasilhough"
 output_path1 = "D:/DataSapi-Train/output1"
 output_path2 = "D:/DataSapi-Train/output2"
 output_path3 = "D:/DataSapi-Train/output3"
@@ -17,15 +18,15 @@ output_path7 = "D:/DataSapi-Train/output7"
 output_path8 = "D:/DataSapi-Train/output8"
 
 #scan gambar di folder masing-masing kelas yang memiliki format .bmp
-for sapi_class in glob.glob("D:/DataSapi-Train/bisain"): #untuk scan Class1
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_1"): #untuk scan Class1
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_2"): #untuk scan Class2
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_3"): #untuk scan Class3
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_4"): #untuk scan Class4
+
+for sapi_class in glob.glob("D:/DataSapi-Train/Class_1"): #untuk scan Class1 done
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_2"): #untuk scan Class2 done
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_3"): #untuk scan Class3 otw
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_4"): #untuk scan Class4 otw
 # for sapi_class in glob.glob("D:/DataSapi-Train/Class_5"): #untuk scan Class5
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_6"): #untuk scan Class6
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_7"): #untuk scan Class7
-# for sapi_class in glob.glob("D:/DataSapi-Train/Class_8"): #untuk scan Class8
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_6"): #untuk scan Class6 done
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_7"): #untuk scan Class7 done
+# for sapi_class in glob.glob("D:/DataSapi-Train/Class_8"): #untuk scan Class8 done
     for filename in glob.glob(os.path.join(sapi_class, "*.bmp")):
         try:
             #Mulai Hough Transform
@@ -33,13 +34,16 @@ for sapi_class in glob.glob("D:/DataSapi-Train/bisain"): #untuk scan Class1
             img_gray = cv2.medianBlur(img_gray, 5)
             img_biner = cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)
             #parameter class 1-7
+            # circles = cv2.HoughCircles(img_gray, cv2.HOUGH_GRADIENT, 1, 20, param1=320, param2=37, minRadius=0, maxRadius=0)
             circles = cv2.HoughCircles(img_gray, cv2.HOUGH_GRADIENT, 1, 20, param1=350, param2=55, minRadius=0, maxRadius=0)
             # Jika circle tidak terdeteksi ubah param1 dan param2
             if(str(circles) == "None"):
-                circles = cv2.HoughCircles(img_gray, cv2.HOUGH_GRADIENT, 1, 20, param1=320, param2=37, minRadius=0, maxRadius=0)
-                # Jika circle masih tidak terdeteksi kembalikan file kosong
-                if(str(circles) == "None"):
-                    continue
+                continue
+                # circles = cv2.HoughCircles(img_gray, cv2.HOUGH_GRADIENT, 1, 20, param1=320, param2=37, minRadius=0, maxRadius=0)
+                # # Jika circle masih tidak terdeteksi kembalikan file kosong
+                # if(str(circles) == "None"):
+                #     # raise Exception
+                #     continue
             circles = numpy.uint16(numpy.around(circles))
 
             # cv2.imshow("hasil", circles)
@@ -62,12 +66,16 @@ for sapi_class in glob.glob("D:/DataSapi-Train/bisain"): #untuk scan Class1
                     else:
                         graykanvas.itemset((i, j, 0), 0)
             #Substraksi gambar deteksi hough dengan gambar grayscale
+            # cv2.imshow("Grayscale Image", img_gray)
+            # cv2.imshow("Graykanvas", graykanvas)
             img_hasil = cv2.subtract(graykanvas, img_gray)
+            # cv2.imshow("hasil substraksi", img_hasil)
 
             namafile = filename.split("\\")[-1]
             #crop gambar hasil hough transform seukuran 112x112 piksel
             hasil_crop = img_hasil[x:x + 112, y - 56:y + 56]  # im awe [y,x]
-            print(hasil_crop)
+            # cv2.imshow("Hasil Hough Transform", hasil_crop)
+
             #Tulis hasil hough transform ke dalam folder output sesuai Class
             cv2.imwrite(os.path.join(output_path1,str(iterate_name) + '.jpg'), hasil_crop) #output hough transform untuk Class_1
             # cv2.imwrite(os.path.join(output_path2,str(iterate_name) + '.jpg'), hasil_crop) #output hough transform untuk Class_2
@@ -77,8 +85,10 @@ for sapi_class in glob.glob("D:/DataSapi-Train/bisain"): #untuk scan Class1
             # cv2.imwrite(os.path.join(output_path6,str(iterate_name) + '.jpg'), hasil_crop) #output hough transform untuk Class_6
             # cv2.imwrite(os.path.join(output_path7,str(iterate_name) + '.jpg'), hasil_crop) #output hough transform untuk Class_7
             # cv2.imwrite(os.path.join(output_path8,str(iterate_name) + '.jpg'), hasil_crop) #output hough transform untuk Class_8
+            print("Selesai gambar ke" + str(iterate_name))
             iterate_name+=1
             cv2.waitKey()
 
-        except OSError as e:
-            print("Something happened:", e)
+        except :
+            os.remove(filename)
+            break

@@ -14,7 +14,6 @@ import matplotlib.pyplot as plt
 # path to input data
 input_path = "Input"
 hasil_path = "hasilKlasifikasi"
-train_path = "Hough/train"
 
 # fixed-sizes for image
 fixed_size = tuple((112, 112))
@@ -22,8 +21,8 @@ fixed_size = tuple((112, 112))
 # bins for histogram
 bins = 8
 
-# get the training labels
-train_labels = os.listdir(train_path)
+# get the data labels
+data_labels = ["kelas1", "kelas2", "kelas3", "kelas4", "kelas5", "kelas6", "kelas7", "kelas8"]
 
 # feature-descriptor: Color Histogram
 def fd_histogram(image, mask=None):
@@ -90,21 +89,19 @@ for file in glob.glob(hasil_path + "/*.jpg"):
         # baca gambar hasil Hough Transform
         image = cv2.imread(file)
 
-        # resize gambarnya
-        image = cv2.resize(image, fixed_size)
-
+        # hitung histogram
         fv_histogram  = fd_histogram(image)
         global_feature = np.hstack([fv_histogram])
 
         # predict label of test image
-        modelrf = pickle.load(open("model.sav", 'rb'))
+        modelrf = pickle.load(open("model_all.sav", 'rb'))
         prediction = modelrf.predict(global_feature.reshape(1,-1))[0]
 
         # show predicted label on image
-        cv2.putText(image, train_labels[prediction], (20,30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1)
+        cv2.putText(image, data_labels[prediction], (20,30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,255), 2)
 
         namafile = file.split("\\")[-1]
-        cv2.imwrite(os.path.join(hasil_path, namafile+"_hasil"+".jpg"), image)
+        cv2.imwrite(os.path.join(hasil_path, data_labels[prediction]+ namafile+"_hasil"+".jpg"), image)
         cv2.imshow('Hasil Klasifikasi', image)
         cv2.waitKey(0)
 

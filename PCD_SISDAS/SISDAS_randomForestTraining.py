@@ -26,56 +26,6 @@ results = []
 names = []
 scoring = "accuracy"
 
-# import the feature vector and trained labels
-h5f_data = h5py.File('output/data.h5', 'r')
-h5f_label = h5py.File('output/labels.h5', 'r')
-
-global_features_string = h5f_data['dataset_1']
-global_labels_string = h5f_label['dataset_1']
-
-global_features = np.array(global_features_string)
-global_labels = np.array(global_labels_string)
-
-h5f_data.close()
-h5f_label.close()
-
-# verify the shape of the feature vector and labels
-print ("[STATUS] features shape: {}".format(global_features.shape))
-print ("[STATUS] labels shape: {}".format(global_labels.shape))
-
-print ("[STATUS] training started...")
-
-# split the training and testing data
-(trainDataGlobal, testDataGlobal, trainLabelsGlobal, testLabelsGlobal) = train_test_split(np.array(global_features),
-                                                                                          np.array(global_labels),
-                                                                                          test_size=0.1,
-                                                                                          random_state=9)
-
-print ("[STATUS] splitted train and test data...")
-print ("Train data  : {}".format(trainDataGlobal.shape))
-print ("Test data   : {}".format(testDataGlobal.shape))
-print ("Train labels: {}".format(trainLabelsGlobal.shape))
-print ("Test labels : {}".format(testLabelsGlobal.shape))
-
-# filter all the warnings
-import warnings
-warnings.filterwarnings('ignore')
-
-#Random Forest
-# create the model - Random Forests
-clf = RandomForestClassifier(n_estimators=100, random_state=9, verbose=2, oob_score=True)
-
-# fit the training data to the model
-clf.fit(trainDataGlobal, trainLabelsGlobal)
-
-# save the model to disk
-filename = 'model.sav'
-pickle.dump(clf, open(filename, 'wb'))
-
-#predict test
-modelrf = pickle.load(open("model.sav", 'rb'))
-test_predict = modelrf.predict(testDataGlobal)
-
 #confusion matrix
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
@@ -111,20 +61,69 @@ def plot_confusion_matrix(cm, classes,
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
 
+# import the feature vector and data labels
+h5f_data = h5py.File('output/data_all.h5', 'r')
+h5f_label = h5py.File('output/labels_all.h5', 'r')
+
+global_features_string = h5f_data['dataset_1']
+global_labels_string = h5f_label['dataset_1']
+
+global_features = np.array(global_features_string)
+global_labels = np.array(global_labels_string)
+
+h5f_data.close()
+h5f_label.close()
+
+# verify the shape of the feature vector and labels
+print ("[STATUS] features shape: {}".format(global_features.shape))
+print ("[STATUS] labels shape: {}".format(global_labels.shape))
+
+print ("[STATUS] training started...")
+
+# split the training and testing data
+(trainDataGlobal, testDataGlobal, trainLabelsGlobal, testLabelsGlobal) = train_test_split(np.array(global_features),
+                                                                                          np.array(global_labels),
+                                                                                          test_size=0.3,
+                                                                                          random_state=9)
+
+print ("[STATUS] splitted train and test data...")
+print ("Train data  : {}".format(trainDataGlobal.shape))
+print ("Test data   : {}".format(testDataGlobal.shape))
+print ("Train labels: {}".format(trainLabelsGlobal.shape))
+print ("Test labels : {}".format(testLabelsGlobal.shape))
+
+# filter all the warnings
+import warnings
+warnings.filterwarnings('ignore')
+
+#Random Forest
+# create the model - Random Forests
+clf = RandomForestClassifier(n_estimators=100, random_state=9, verbose=2, oob_score=True)
+
+# fit the training data to the model
+clf.fit(trainDataGlobal, trainLabelsGlobal)
+
+# save the model to disk
+filename = 'model_all.sav'
+pickle.dump(clf, open(filename, 'wb'))
+
+#predict test
+modelrf = pickle.load(open("model_all.sav", 'rb'))
+test_predict = modelrf.predict(testDataGlobal)
+
 # Compute confusion matrix
 cnf_matrix = confusion_matrix(testLabelsGlobal, test_predict)
 np.set_printoptions(precision=2)
 
 # Plot non-normalized confusion matrix
 plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=train_labels,
+plot_confusion_matrix(cnf_matrix, classes=data_labels,
                       title='Confusion matrix, without normalization')
 
 # Plot normalized confusion matrix
 plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=train_labels, normalize=True,
+plot_confusion_matrix(cnf_matrix, classes=data_labels, normalize=True,
                       title='Normalized confusion matrix')
-
 plt.show()
 
 # 10-fold cross validation
